@@ -5,13 +5,14 @@ import {
     ActivityIcon, ArtIcon, CultureIcon, DiningIcon, EntertainmentIcon, HeritageIcon,
     LiveMusicIcon, NatureIcon, NightlifeIcon, OutdoorsIcon, RelaxingIcon,
     ShoppingIcon, SpecialEventIcon, TravelIcon, ArrowRightIcon, SparklesIcon,
-    InfoIcon, MapPinIcon, PriceIcon, TimeIcon, TransportIcon
+    InfoIcon, MapPinIcon, PriceIcon, TimeIcon, TransportIcon, BookmarkIcon
 } from '../assets/icons';
 
 interface ItineraryDisplayProps {
     initialPlan: SavedPlan;
     setPlan: (plan: SavedPlan) => void;
     onReset: () => void;
+    onSavePlan: (plan: SavedPlan) => void;
 }
 
 const categoryIcons: { [key: string]: React.FC<React.SVGProps<SVGSVGElement>> } = {
@@ -91,7 +92,7 @@ const DayTimeline: React.FC<{ dayPlan: DayPlan }> = ({ dayPlan }) => (
 );
 
 
-export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({ initialPlan, setPlan, onReset }) => {
+export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({ initialPlan, setPlan, onReset, onSavePlan }) => {
     const [plan, setInternalPlan] = useState(initialPlan);
     const [userInput, setUserInput] = useState('');
     const [isUpdating, setIsUpdating] = useState(false);
@@ -115,6 +116,10 @@ export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({ initialPlan,
             setIsUpdating(false);
             setUserInput('');
         }
+    };
+
+    const handleSave = () => {
+        onSavePlan(plan);
     };
 
     return (
@@ -176,7 +181,14 @@ export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({ initialPlan,
             )}
 
 
-            <div className="text-center pt-4">
+            <div className="text-center pt-4 flex flex-wrap justify-center gap-4">
+                 <button
+                    onClick={handleSave}
+                    className="flex items-center justify-center gap-2 bg-primary text-white font-bold py-2 px-6 rounded-lg hover:opacity-90 transition-all"
+                >
+                    <BookmarkIcon className="w-4 h-4" />
+                    Save to My Plans
+                </button>
                 <button
                     onClick={onReset}
                     className="bg-bkg-muted text-text-base font-bold py-2 px-6 rounded-lg hover:opacity-80 transition-all"

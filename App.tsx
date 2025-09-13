@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useLocalStorage from './hooks/useLocalStorage';
 import { v4 as uuidv4 } from 'uuid';
-import type { Plan, ManualActivity, Itinerary, SavedPlan, BrowserActivity } from './shared/types';
+import type { Plan, ManualActivity, Itinerary, SavedPlan, BrowserActivity, ActivityCategory } from './shared/types';
 import { WeekendSchedule } from './components/WeekendSchedule';
 import { ActivityBrowser } from './components/ActivityBrowser';
 import { EditActivityModal } from './components/EditActivityModal';
@@ -30,6 +30,58 @@ export const themes = [
     { name: 'Adventure', class: 'theme-adventure', color: 'bg-emerald-400' },
     { name: 'Sunny', class: 'theme-sunny', color: 'bg-orange-500' }
 ];
+
+const mapAiCategoryToManualCategory = (aiCategory: string): ActivityCategory => {
+    const mapping: { [key: string]: ActivityCategory } = {
+        'Dining': 'Dining',
+        'Entertainment': 'Entertainment',
+        'Relaxation': 'Relaxing',
+        'Activity': 'Outdoors',
+        'Nightlife': 'Entertainment',
+        'Shopping': 'Culture',
+        'Culture': 'Culture',
+        'History & Heritage': 'Culture',
+        'Nature & Parks': 'Outdoors',
+        'Special Event': 'Entertainment',
+        'Outdoor Activities': 'Outdoors',
+        'Travel': 'Outdoors', // Best fit available
+        'Art & Culture': 'Culture',
+        'Live Music': 'Entertainment'
+    };
+    return mapping[aiCategory] || 'Entertainment';
+};
+
+const convertItineraryToPlan = (itinerary: Itinerary): Plan => {
+    return {
+        id: uuidv4(),
+        name: itinerary.title,
+        days: itinerary.itinerary.map(dayPlan => {
+            const [dayName, ...dateParts] = dayPlan.day.split(',');
+            const dateStr = dateParts.join(',').trim();
+            let isoDate = '';
+            try {
+                if(dateStr) {
+                    isoDate = new Date(dateStr).toISOString().split('T')[0];
+                }
+            } catch (e) {
+                console.warn("Could not parse date from AI itinerary:", dateStr);
+            }
+            
+            return {
+                id: uuidv4(),
+                name: dayName.trim(),
+                date: isoDate,
+                activities: dayPlan.activities.map(activity => ({
+                    id: uuidv4(),
+                    title: activity.title,
+                    time: activity.time,
+                    notes: activity.description,
+                    category: mapAiCategoryToManualCategory(activity.category)
+                }))
+            };
+        })
+    };
+};
 
 const App: React.FC = () => {
     const [plans, setPlans] = useLocalStorage<Plan[]>('weekend-plans', [defaultPlan]);
@@ -84,7 +136,7 @@ const App: React.FC = () => {
 
     const handleSavePlanName = () => {
         if (!activePlan || !planNameInput.trim()) {
-            if(activePlan) setPlanNameInput(activePlan.name);
+            if(activePlan) setPlanNameInput(activePlan.name); 
             setIsEditingPlanName(false);
             return;
         };
@@ -275,6 +327,14 @@ const App: React.FC = () => {
         setAiModalOpen(false);
     };
 
+    const handleSaveAiPlan = (itinerary: Itinerary) => {
+        const newPlan = convertItineraryToPlan(itinerary);
+        setPlans(prevPlans => [...prevPlans, newPlan]);
+        setActivePlanId(newPlan.id);
+        setAiPlan(null);
+        setView('manual-planner');
+    };
+
     if (!activePlan) {
          if (plans.length > 0) {
             setActivePlanId(plans[0].id);
@@ -353,6 +413,7 @@ const App: React.FC = () => {
                     setAiPlan(null);
                     setView('manual-planner');
                 }}
+                onSavePlan={handleSaveAiPlan}
             />
         </div>;
     };

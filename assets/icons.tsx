@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export const SparklesIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
@@ -119,4 +118,8 @@ export const FamilyIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 );
 export const CultureIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M4 22h16"/><path d="M6 18h12"/><path d="M10 18v-5l-2-2v-1h8v1l-2 2v5"/><path d="M12 5l-2-2h4l-2 2z"/></svg>
+);
+
+export const BookmarkIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
 );
