@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
         preview: {
             host: '0.0.0.0',
             port: Number(process.env.PORT) || 4173,
-            allowedHosts: ['planit-4u0a.onrender.com']
+            allowedHosts: 'all'
         }
     };
 });
