@@ -3,12 +3,18 @@ import React, { useState, useEffect } from 'react';
 import { SparklesIcon } from '../assets/icons';
 
 const messages = [
-    "Consulting local guides...",
-    "Finding hidden gems...",
-    "Checking for special events...",
-    "Crafting your unique experience...",
-    "Perfecting the schedule...",
-    "Just a moment more..."
+    "Scanning the best spots nearby...",
+    "Uncovering hidden treasures just for you...",
+    "Checking out the latest events around...",
+    "Tailoring activities to your vibe...",
+    "Aligning the perfect weekend flow...",
+    "Adding a sprinkle of adventure...",
+    "Curating fun experiences...",
+    "Optimizing your time for maximum joy...",
+    "Almost ready! Just fine-tuning...",
+    "Your weekend getaway is loading...",
+    "One last step to create memories...",
+    "Bringing it all together..."
 ];
 
 export const LoadingScreen: React.FC = () => {

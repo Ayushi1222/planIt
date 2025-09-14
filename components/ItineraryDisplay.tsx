@@ -5,7 +5,7 @@ import {
     ActivityIcon, ArtIcon, CultureIcon, DiningIcon, EntertainmentIcon, HeritageIcon,
     LiveMusicIcon, NatureIcon, NightlifeIcon, OutdoorsIcon, RelaxingIcon,
     ShoppingIcon, SpecialEventIcon, TravelIcon, ArrowRightIcon, SparklesIcon,
-    InfoIcon, MapPinIcon, PriceIcon, TimeIcon, TransportIcon, BookmarkIcon
+    InfoIcon, MapPinIcon, PriceIcon, TimeIcon, TransportIcon, BookmarkIcon, ArrowLeftIcon
 } from '../assets/icons';
 
 interface ItineraryDisplayProps {
@@ -124,6 +124,24 @@ export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({ initialPlan,
 
     return (
         <div className="space-y-8">
+             <div className="flex justify-between items-center">
+                <button
+                    onClick={onReset}
+                    className="flex items-center justify-center gap-2 text-text-muted font-semibold py-2 px-4 rounded-lg hover:bg-bkg-muted transition-colors"
+                    aria-label="Back to planner"
+                >
+                    <ArrowLeftIcon className="w-5 h-5" />
+                    <span>Back to Planner</span>
+                </button>
+                <button
+                    onClick={handleSave}
+                    className="flex items-center justify-center gap-2 bg-primary text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 transition-all"
+                >
+                    <BookmarkIcon className="w-4 h-4" />
+                    Save to My Plans
+                </button>
+            </div>
+
             <div className="bg-bkg-surface p-6 md:p-8 rounded-2xl shadow-2xl border border-border-base">
                 <div className="text-center mb-8">
                     <h2 className="text-3xl md:text-4xl font-extrabold text-text-base">{plan.title}</h2>
@@ -179,23 +197,6 @@ export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({ initialPlan,
                     </ul>
                 </div>
             )}
-
-
-            <div className="text-center pt-4 flex flex-wrap justify-center gap-4">
-                 <button
-                    onClick={handleSave}
-                    className="flex items-center justify-center gap-2 bg-primary text-white font-bold py-2 px-6 rounded-lg hover:opacity-90 transition-all"
-                >
-                    <BookmarkIcon className="w-4 h-4" />
-                    Save to My Plans
-                </button>
-                <button
-                    onClick={onReset}
-                    className="bg-bkg-muted text-text-base font-bold py-2 px-6 rounded-lg hover:opacity-80 transition-all"
-                >
-                    Create a New Plan
-                </button>
-            </div>
         </div>
     );
 };
