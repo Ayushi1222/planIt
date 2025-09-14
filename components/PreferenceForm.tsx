@@ -481,7 +481,18 @@ export const PreferenceForm: React.FC<PreferenceFormProps> = ({ onSubmit }) => {
               <div className="space-y-3">
                 <button
                   type="button"
-                  onClick={handleDetectLocation}
+                  onClick={async () => {
+                    setLocationStatus("locating");
+                    setLocationError(null);
+                    setAddressInput("");
+                    setSuggestions([]);
+                    try {
+                      await handleDetectLocation();
+                    } catch (e) {
+                      setLocationStatus("error");
+                      setLocationError("Could not detect your location.");
+                    }
+                  }}
                   disabled={locationStatus === "locating"}
                   className="flex items-center justify-center gap-2 w-full text-sm font-semibold py-2 px-4 rounded-lg transition-all duration-300 border bg-bkg-muted border-border-base hover:bg-primary/20 disabled:opacity-50"
                 >
@@ -519,7 +530,9 @@ export const PreferenceForm: React.FC<PreferenceFormProps> = ({ onSubmit }) => {
                       {suggestions.map((s, index) => (
                         <li
                           key={`${s.place_id}-${index}`}
-                          onClick={() => handleSuggestionClick(s)}
+                          onClick={async () => {
+                            await handleSuggestionClick(s);
+                          }}
                           className="px-3 py-2 cursor-pointer hover:bg-primary text-sm"
                         >
                           {s.description}
@@ -533,29 +546,27 @@ export const PreferenceForm: React.FC<PreferenceFormProps> = ({ onSubmit }) => {
                     {locationError}
                   </p>
                 )}
-                {(locationStatus === "success" && location) || (!location && dates) ? (
+                {(location && location.latitude && location.longitude) && (
                   <div className="text-center pt-3 border-t border-border-base">
                     <p className="font-semibold text-green-400 text-sm">
                       Location Set
                     </p>
                     <p className="text-xs text-text-muted my-1">
-                      {(location && location.address) || DEFAULT_LOCATION.address}
+                      {location.address}
                     </p>
                     <div
                       id="map-preview"
                       className="h-24 w-full rounded-lg my-2 border border-border-base bg-bkg-muted"
                     ></div>
-                    {location && (
-                      <button
-                        type="button"
-                        onClick={() => setMapModalOpen(true)}
-                        className="flex items-center justify-center gap-1 mx-auto text-xs text-primary hover:underline"
-                      >
-                        <EditIcon className="w-3 h-3" /> Adjust
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => setMapModalOpen(true)}
+                      className="flex items-center justify-center gap-1 mx-auto text-xs text-primary hover:underline"
+                    >
+                      <EditIcon className="w-3 h-3" /> Adjust
+                    </button>
                   </div>
-                ) : null}
+                )}
               </div>
             )}
           </FormSection>
