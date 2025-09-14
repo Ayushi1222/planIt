@@ -80,7 +80,7 @@ export const ActivityBrowser: React.FC<ActivityBrowserProps> = ({ aiIdeas, setAi
     return (
         <aside className="lg:col-span-3 bg-bkg-surface/50 rounded-2xl p-4 flex flex-col h-full">
             <div className="px-2 pb-4 border-b border-border-base mb-4">
-                <h2 className="text-xl font-bold text-text-base mb-3">Activity Palette</h2>
+                <h2 className="text-2xl font-bold text-text-base mb-3">Activity Palette</h2>
                 <form onSubmit={handleGenerateIdeas} className="space-y-2">
                     <input 
                         type="text"

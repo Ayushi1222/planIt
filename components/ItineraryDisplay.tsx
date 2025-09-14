@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { SavedPlan, DayPlan, Activity } from '../shared/types';
 import { continueItineraryChat, initializeChatFromPlan } from '../services/geminiService';
 import {
     ActivityIcon, ArtIcon, CultureIcon, DiningIcon, EntertainmentIcon, HeritageIcon,
     LiveMusicIcon, NatureIcon, NightlifeIcon, OutdoorsIcon, RelaxingIcon,
     ShoppingIcon, SpecialEventIcon, TravelIcon, ArrowRightIcon, SparklesIcon,
-    InfoIcon, MapPinIcon, PriceIcon, TimeIcon, TransportIcon, BookmarkIcon, ArrowLeftIcon
+    InfoIcon, MapPinIcon, PriceIcon, TimeIcon, TransportIcon, BookmarkIcon, ArrowLeftIcon,
+    CheckCircleIcon
 } from '../assets/icons';
 
 interface ItineraryDisplayProps {
@@ -97,6 +98,11 @@ export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({ initialPlan,
     const [userInput, setUserInput] = useState('');
     const [isUpdating, setIsUpdating] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [updateSuccess, setUpdateSuccess] = useState(false);
+
+    useEffect(() => {
+        setInternalPlan(initialPlan);
+    }, [initialPlan]);
 
     const handleModification = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -104,12 +110,20 @@ export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({ initialPlan,
 
         setIsUpdating(true);
         setError(null);
+        setUpdateSuccess(false);
         try {
             const chat = initializeChatFromPlan(plan);
             const { updatedItinerary, updatedHistory } = await continueItineraryChat(chat, userInput, plan.preferences);
+
+            if (!updatedItinerary || !updatedItinerary.itinerary || !Array.isArray(updatedItinerary.itinerary) || !updatedItinerary.title) {
+                throw new Error("The AI returned an invalid plan structure. Please try rephrasing your request.");
+            }
+            
             const newPlan = { ...updatedItinerary, chatHistory: updatedHistory };
             setInternalPlan(newPlan);
             setPlan(newPlan);
+            setUpdateSuccess(true);
+            setTimeout(() => setUpdateSuccess(false), 3000);
         } catch (e: any) {
             setError(e.message || 'Failed to update the plan. Please try a different request.');
         } finally {
@@ -144,14 +158,14 @@ export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({ initialPlan,
 
             <div className="bg-bkg-surface p-6 md:p-8 rounded-2xl shadow-2xl border border-border-base">
                 <div className="text-center mb-8">
-                    <h2 className="text-3xl md:text-4xl font-extrabold text-text-base">{plan.title}</h2>
+                    <h2 className="text-3xl md:text-4xl font-extrabold text-text-base">{plan?.title || 'Weekend Itinerary'}</h2>
                     <p className="text-lg text-text-muted mt-2">
-                        Total Estimated Cost: <span className="font-bold text-primary">{plan.totalEstimatedCost}</span>
+                        Total Estimated Cost: <span className="font-bold text-primary">{plan?.totalEstimatedCost || 'Not available'}</span>
                     </p>
                 </div>
 
                 <div className="space-y-12">
-                    {plan.itinerary.map((dayPlan, index) => (
+                    {plan?.itinerary?.map((dayPlan, index) => (
                         <DayTimeline key={index} dayPlan={dayPlan} />
                     ))}
                 </div>
@@ -180,10 +194,16 @@ export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({ initialPlan,
                         </button>
                     </div>
                 </form>
+                {updateSuccess && (
+                    <div className="flex items-center justify-center gap-2 text-sm text-green-400 mt-2">
+                        <CheckCircleIcon className="w-5 h-5" />
+                        <span>Plan updated successfully!</span>
+                    </div>
+                )}
                 {error && <p className="text-sm text-red-400 mt-2 text-center">{error}</p>}
             </div>
 
-            {plan.sources && plan.sources.length > 0 && (
+            {plan?.sources && plan.sources.length > 0 && (
                 <div className="bg-bkg-surface p-6 rounded-2xl border border-border-base">
                     <h3 className="text-lg font-bold mb-3 flex items-center gap-2"><InfoIcon/> Plan Sources</h3>
                     <ul className="list-disc list-inside text-sm space-y-1">
