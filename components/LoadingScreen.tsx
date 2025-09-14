@@ -25,7 +25,7 @@ export const LoadingScreen: React.FC = () => {
     return (
         <div className="flex flex-col items-center justify-center p-8 bg-bkg-surface rounded-2xl shadow-2xl border border-border-base text-center">
             <SparklesIcon className="w-12 h-12 text-primary animate-pulse" />
-            <h2 className="text-2xl font-bold text-text-base mt-4">Curating Your Perfect Weekend</h2>
+            <h2 className="text-2xl font-bold text-text-base mt-4">Creating Your Perfect Weekend Plan</h2>
             <p className="text-text-muted mt-2 transition-opacity duration-500">
                 {messages[messageIndex]}
             </p>

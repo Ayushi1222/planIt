@@ -1,12 +1,13 @@
 import React from 'react';
 import type { Theme } from '../App';
 import { themes } from '../App';
-import { LogoIcon, SparklesIcon, PlansIcon, ShareIcon } from '../assets/icons';
+import { LogoIcon, SparklesIcon, PlansIcon, ShareIcon, AddIcon } from '../assets/icons';
 
 interface NavbarProps {
     onOpenAiModal: () => void;
     onOpenPlansModal: () => void;
     onOpenShareModal: () => void;
+    onOpenNewPlanModal: () => void;
     activeTheme: Theme;
     onSetTheme: (theme: Theme) => void;
 }
@@ -15,6 +16,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     onOpenAiModal, 
     onOpenPlansModal, 
     onOpenShareModal, 
+    onOpenNewPlanModal,
     activeTheme, 
     onSetTheme 
 }) => {
@@ -22,10 +24,26 @@ export const Navbar: React.FC<NavbarProps> = ({
         <header className="flex justify-between items-center p-4 border-b border-border-base bg-bkg-base/80 backdrop-blur-sm shrink-0 sticky top-0 z-30">
             <div className="flex items-center gap-3">
                 <LogoIcon className="w-8 h-8 text-primary" />
-                <h1 className="text-2xl font-bold tracking-tight hidden sm:block">planIt</h1>
+                <button
+                    type="button"
+                    onClick={() => window.location.href = '/'}
+                    className="text-4xl font-bold tracking-tight hidden sm:block bg-transparent border-none p-0 m-0 cursor-pointer focus:outline-none"
+                    style={{ background: 'none' }}
+                    aria-label="Go to home page"
+                >
+                    planIt
+                </button>
             </div>
             <div className="flex items-center gap-2 md:gap-4">
-                 <button
+                <button
+                    onClick={onOpenNewPlanModal}
+                    className="flex items-center gap-2 px-3 py-2 text-sm font-semibold rounded-md bg-bkg-surface border border-border-base hover:bg-bkg-muted transition-colors"
+                    title="New Plan"
+                >
+                    <AddIcon className="w-4 h-4" />
+                    <span className="hidden md:inline">New Plan</span>
+                </button>
+                <button
                     onClick={onOpenPlansModal}
                     className="flex items-center gap-2 px-3 py-2 text-sm font-semibold rounded-md bg-bkg-surface border border-border-base hover:bg-bkg-muted transition-colors"
                     title="My Plans"

@@ -24,7 +24,7 @@ export const AiPlannerModal: React.FC<AiPlannerModalProps> = ({ isOpen, onClose,
             onGenerated(itinerary);
         } catch (e: any) {
             console.error("Failed to create plan:", e);
-            setError(e.message || 'An unknown error occurred while curating your weekend. Please try again.');
+            setError(e.message || 'An unknown error occurred while creating your weekend plan. Please try again.');
         } finally {
             setIsLoading(false);
         }

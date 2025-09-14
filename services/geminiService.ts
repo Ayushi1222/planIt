@@ -123,7 +123,7 @@ const cleanJsonText = (text: string) => {
 const getSystemInstruction = (preferences: Preferences) => {
     const city = preferences.location.address.split(',').slice(-2, -1)[0]?.trim() || 'the user\'s specified city';
     return `
-You are "Curate"—a world-class AI concierge and expert on ${city}. Your mission is to craft a hyper-personalized, logistically flawless weekend itinerary.
+You are "planIt"—a world-class AI concierge and expert on ${city}. Your mission is to craft a hyper-personalized, logistically flawless weekend itinerary.
 PRIMARY DIRECTIVES:
 1.  LOCATION IS PARAMOUNT: Generate an itinerary ONLY for ${city}.
 2.  JSON ONLY & SCHEMA PERFECT: Your output MUST be a single, valid JSON object that strictly conforms to the provided schema. No prose or markdown.

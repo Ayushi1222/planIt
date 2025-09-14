@@ -29,6 +29,8 @@ export interface Plan {
   id: string;
   name: string;
   days: Day[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Preferences {

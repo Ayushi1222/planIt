@@ -84,6 +84,18 @@ const convertItineraryToPlan = (itinerary: Itinerary): Plan => {
 };
 
 const App: React.FC = () => {
+    const handleCreatePlan = () => {
+        const newPlan: Plan = {
+            id: uuidv4(),
+            name: `New Weekend Plan ${plans.length + 1}`,
+            days: [
+                { id: uuidv4(), name: 'Saturday', date: '', activities: [] },
+                { id: uuidv4(), name: 'Sunday', date: '', activities: [] },
+            ]
+        };
+        setPlans([...plans, newPlan]);
+        setActivePlanId(newPlan.id);
+    };
     const [plans, setPlans] = useLocalStorage<Plan[]>('weekend-plans', [defaultPlan]);
     const [activePlanId, setActivePlanId] = useLocalStorage<string | null>('active-weekend-plan-id', defaultPlan.id);
     const [aiPlan, setAiPlan] = useLocalStorage<SavedPlan | null>('ai-weekend-plan', null);
@@ -131,7 +143,8 @@ const App: React.FC = () => {
     }, [isEditingPlanName]);
 
     const setActivePlan = (updatedPlan: Plan) => {
-        setPlans(prevPlans => prevPlans.map(p => p.id === updatedPlan.id ? updatedPlan : p));
+        const now = new Date().toISOString();
+        setPlans(prevPlans => prevPlans.map(p => p.id === updatedPlan.id ? { ...updatedPlan, updatedAt: now } : p));
     };
 
     const handleSavePlanName = () => {
@@ -424,6 +437,7 @@ const App: React.FC = () => {
                 onOpenAiModal={() => setAiModalOpen(true)}
                 onOpenPlansModal={() => setPlansModalOpen(true)}
                 onOpenShareModal={() => setShareModalOpen(true)}
+                onOpenNewPlanModal={handleCreatePlan}
                 activeTheme={theme}
                 onSetTheme={setTheme}
             />
